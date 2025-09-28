@@ -8,13 +8,6 @@ class Bateau:
         self.longueur = longueur
         self.vertical = vertical
 
-    def __repr__(self):
-        """
-        Retourne la commande de création du bateau.
-        """
-        orientation = "vertical" if self.vertical else "horizontal"
-        return f"Bateau(ligne={self.ligne}, colonne={self.colonne}, longueur={self.longueur}, {orientation})"
-
     @property
     def positions(self):
         """

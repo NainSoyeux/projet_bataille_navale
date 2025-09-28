@@ -81,11 +81,3 @@ def test_positions_reagit_aux_changements_attributs():
     b.longueur = 3
     # attendu : [(2,3),(3,3),(4,3)]
     assert b.positions == [(2, 3), (3, 3), (4, 3)]
-
-# ---------- Robustesse d'affichage ----------
-
-def test_repr_ne_crashe_pas():
-    b = Bateau(2, 3, longueur=3, vertical=False)
-    # On ne fige pas la chaîne exacte, on vérifie juste que ça ne plante pas
-    s = repr(b)
-    assert isinstance(s, str) and len(s) > 0
