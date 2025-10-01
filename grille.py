@@ -1,10 +1,12 @@
+from bateau import Bateau
+
 class Grille:
     def __init__(self, L: int, C: int):
         
         """Initialise une grille de taille L x C remplie de '.'"""
         self.lignes = L
         self.colonnes = C
-        self.grille = ['.' for _ in range(C*L)]
+        self.grille = ['~' for _ in range(C*L)]
     
     def afficher(self):
         """Affiche la grille à l'écran"""
@@ -18,3 +20,13 @@ class Grille:
             self.grille[ligne * self.colonnes + colonne] = 'x'
         else:
             print("Coordonnées hors de la grille")
+            
+    def ajoute(self, bateau: Bateau):
+        """Place un bateau si toutes ses positions tiennent dans la grille."""
+        positions = bateau.positions
+        for (i, j) in positions:
+            if not (0 <= i < self.lignes and 0 <= j < self.colonnes):
+                return  
+        for (i, j) in positions:
+            idx = i * self.colonnes + j
+            self.grille[idx] = "⛵"
