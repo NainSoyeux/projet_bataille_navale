@@ -1,5 +1,6 @@
 import pytest
 from grille import Grille
+from bateau import Bateau
 
 # ---------- Utilitaires locaux pour les attentes d'affichage ----------
 
@@ -13,7 +14,7 @@ def grille_str_attendue(L, C, marque=None):
     for i in range(L):
         row = []
         for j in range(C):
-            row.append('x' if (i, j) in marque else '.')
+            row.append('x' if (i, j) in marque else '~')
         lignes.append(' '.join(row))
     return '\n'.join(lignes) + '\n'  # print ajoute un \n par ligne
 
@@ -23,10 +24,10 @@ def test_init_dimensions_et_contenu_initial():
     g = Grille(3, 4)
     assert g.lignes == 3
     assert g.colonnes == 4
-    # La grille interne contient L*C éléments, tous '.'
+    # La grille interne contient L*C éléments, tous '~'
     assert isinstance(g.grille, list)
     assert len(g.grille) == 3 * 4
-    assert set(g.grille) == {'.'}
+    assert set(g.grille) == {'~'}
 
 # ---------- Tests d'affichage (capture stdout via capsys) ----------
 
@@ -59,7 +60,7 @@ def test_afficher_apres_tir(capsys):
 def test_tirer_valide_modifie_la_case(L, C, ligne, col):
     g = Grille(L, C)
     idx = ligne * C + col
-    assert g.grille[idx] == '.'
+    assert g.grille[idx] == '~'
     g.tirer(ligne, col)
     assert g.grille[idx] == 'x'
 
@@ -101,3 +102,21 @@ def test_scenario_plouf_affichage_avant_apres(capsys):
     g.afficher()
     out2 = capsys.readouterr().out
     assert out2 == grille_str_attendue(L, C, marque={(2, 3)})
+
+def test_ajoute_horizontal_ok():
+    g = Grille(2, 3)
+    g.ajoute(Bateau(1, 0, longueur=2, vertical=False))
+    attendu = ["~", "~", "~", "⛵", "⛵", "~"]
+    assert g.grille == attendu
+
+def test_ajoute_vertical_hors_grille():
+    g = Grille(2, 3)
+    avant = g.grille.copy()
+    g.ajoute(Bateau(1, 0, longueur=2, vertical=True))
+    assert g.grille == avant  
+
+def test_ajoute_trop_long():
+    g = Grille(2, 3)
+    avant = g.grille.copy()
+    g.ajoute(Bateau(1, 0, longueur=4, vertical=True))
+    assert g.grille == avant  
