@@ -13,11 +13,11 @@ class Grille:
         for i in range(self.lignes):
             print(' '.join(self.grille[i*self.colonnes:(i+1)*self.colonnes]))
 
-    def tirer(self, ligne: int, colonne: int):
+    def tirer(self, ligne: int, colonne: int, touche = 'x'):
         """Tire à la position (x, y) en marquant un 'x', 
         Attention : les lignes (resp colonnes) vont de 0 à L-1 (C-1)"""
         if 0 <= ligne < self.lignes and 0 <= colonne < self.colonnes:
-            self.grille[ligne * self.colonnes + colonne] = 'x'
+            self.grille[ligne * self.colonnes + colonne] = touche
         else:
             print("Coordonnées hors de la grille")
             
