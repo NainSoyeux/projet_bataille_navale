@@ -1,6 +1,7 @@
 import inspect
 import pytest
 from bateau import Bateau
+from grille import Grille
 
 # ---------- Tests sur le constructeur ----------
 
@@ -81,3 +82,41 @@ def test_positions_reagit_aux_changements_attributs():
     b.longueur = 3
     # attendu : [(2,3),(3,3),(4,3)]
     assert b.positions == [(2, 3), (3, 3), (4, 3)]
+
+def test_bateau_pas_coule_initialement():
+    g = Grille(3, 3)
+    b = Bateau(1, 0, longueur=2, vertical=False)   # (1,0),(1,1)
+    g.ajoute(b)
+    assert b.coule(g) is False  # toutes les cases sont "~"
+
+def test_bateau_touche_partiellement():
+    g = Grille(3, 3)
+    b = Bateau(0, 0, longueur=3, vertical=False)   # (0,0),(0,1),(0,2)
+    g.ajoute(b)
+    g.tirer(0, 0, touche="x")   # une case ≠ "~"
+    assert b.coule(g) is False  # pas toutes touchées
+
+def test_bateau_coule_avec_x():
+    g = Grille(2, 3)
+    b = Bateau(1, 0, longueur=2, vertical=False)   # (1,0),(1,1)
+    g.ajoute(b)
+    g.tirer(1, 0, touche="x")
+    g.tirer(1, 1, touche="x")
+    assert b.coule(g) is True
+
+def test_bateau_coule_avec_autres_symboles():
+    g = Grille(2, 3)
+    b = Bateau(0, 1, longueur=2, vertical=False)   # (0,1),(0,2)
+    g.ajoute(b)
+    g.tirer(0, 1, touche="💣")   # autre que "~"
+    g.tirer(0, 2, touche="*")   # autre que "~"
+    assert b.coule(g) is True   # règles : tout ≠ "~" = touché
+
+def test_bateau_pas_coule_si_une_case_reste_vierge():
+    g = Grille(2, 3)
+    b = Bateau(0, 0, longueur=3, vertical=False)   # (0,0),(0,1),(0,2)
+    g.ajoute(b)
+    g.tirer(0, 0, touche="x")
+    g.tirer(0, 1, touche="💣")
+    # la case (0,2) est encore "~"
+    assert b.coule(g) is False
