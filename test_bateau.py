@@ -1,6 +1,6 @@
 import inspect
 import pytest
-from bateau import Bateau
+from bateau import Bateau, PorteAvion, Croiseur, Torpilleur, SousMarin
 from grille import Grille
 
 # ---------- Tests sur le constructeur ----------
@@ -120,3 +120,20 @@ def test_bateau_pas_coule_si_une_case_reste_vierge():
     g.tirer(0, 1, touche="💣")
     # la case (0,2) est encore "~"
     assert b.coule(g) is False
+
+@pytest.mark.parametrize(
+    "bateau, marque, longueur",
+    [
+        (PorteAvion, "🚢", 4),
+        (Croiseur, "⛴", 3),
+        (Torpilleur, "🚣", 2),
+        (SousMarin, "🐟", 2),
+    ],
+)
+def test_ajout_types_bateaux(bateau, marque, longueur):
+    g = Grille(5, 5)
+    b = bateau(1, 1, vertical=False)
+    assert len(b.positions) == longueur
+    g.ajoute(b)
+    for (i, j) in b.positions:
+        assert g.grille[i * g.colonnes + j] == marque
