@@ -29,4 +29,4 @@ class Grille:
                 return  
         for (i, j) in positions:
             idx = i * self.colonnes + j
-            self.grille[idx] = "⛵"
+            self.grille[idx] = bateau.marque
