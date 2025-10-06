@@ -1,37 +1,32 @@
 # 🛳️ Bataille Navale (version 1 joueur)
 
-Projet Python collaboratif visant à implémenter une version simplifiée du jeu de **Bataille Navale**.  
-L'objectif n’est pas de coder une partie à deux joueurs, mais de développer une **interface de jeu pour un seul joueur**, avec une grille et des bateaux à placer/tirer dessus.
+Implémentation Python d’une bataille navale solo, jouable soit en console classique, soit via une interface PyTermGUI entièrement interactive. Le but est de couler la flotte générée aléatoirement en un minimum de tirs.
 
 ---
 
-## 🎯 Fonctionnalités attendues
+## 🎯 Fonctionnalités
 
 - **Grille de jeu**
-  - Définie par `C` colonnes et `L` lignes.
-  - Affichage de la grille à tout moment.
-  - Possibilité de tirer sur une case.
+  - Format par défaut : 8 lignes × 10 colonnes.
+  - Affichage console et TUI, avec options de révélation et disposition finale.
+  - Validation des tirs (coordonnées dans la grille, case déjà ciblée, etc.).
 
 - **Gestion des bateaux**
-  - Chaque bateau a une longueur.
-  - Placement possible **horizontalement ou verticalement**.
-  - Les bateaux ne peuvent :
-    - pas dépasser de la grille,
-    - pas se chevaucher.
+  - Porte-avions, croiseur, torpilleur, sous-marin (longueur spécifique, placement horizontal/vertical).
+  - Placement aléatoire sans chevauchement, reproductible via une graine (`--seed`).
 
-- **État des cases**
-  - `vierge` : case vide et non frappée,
-  - `frappée` : case ciblée par un tir.
-
-- **État des bateaux**
-  - Détection lorsqu’un bateau est **touché** (et où).
-  - Détection lorsqu’un bateau est **coulé**.
+- **Retour d’état**
+  - Messages distincts pour `manqué`, `touché`, `coulé`.
+  - Suivi du nombre de coups et affichage de la flotte une fois la partie gagnée.
+  - Dans la TUI : bouton « Révéler » disponible à tout moment (met fin à la partie).
 
 ---
 
-## 🛠️ Technologies utilisées
-- **Langage :** Python 3.x
-- **Gestion de version :** Git / GitHub
+## 🛠️ Technologies
+
+- Python 3.11+
+- PyTermGUI (TUI)
+- Pytest (tests unitaires)
 
 ---
 
@@ -41,3 +36,43 @@ L'objectif n’est pas de coder une partie à deux joueurs, mais de développer 
    ```bash
    git clone https://github.com/ton-compte/bataille-navale.git
    cd bataille-navale
+   ```
+
+2. Créer / activer un environnement virtuel :
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate      # Linux / macOS
+   .venv\Scripts\activate         # Windows
+   ```
+
+3. Installer les dépendances :
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. Lancer le jeu :
+   - **Mode console :**
+     ```bash
+     python main.py
+     ```
+   - **Mode TUI PyTermGUI :**
+     ```bash
+     python main.py --tui
+     ```
+   - (Optionnel) reproduire un placement :
+     ```bash
+     python main.py --seed 42
+     ```
+
+---
+
+## ✅ Tests
+
+Exécuter la suite Pytest :
+```bash
+pytest -q
+```
+
+---
+
+Bon jeu ! 🎯

@@ -1,3 +1,4 @@
+import argparse
 import random
 
 from bateau import PorteAvion, Croiseur, Torpilleur, SousMarin
@@ -5,7 +6,7 @@ from grille import Grille
 
 
 def placements_possibles(grille: Grille, longueur: int):
-    """Calcule toutes les positions/ orientations valides pour un bateau."""
+    """Calcule toutes les positions / orientations valides pour un bateau."""
     placements = []
     for vertical in (False, True):
         for ligne in range(grille.lignes):
@@ -18,7 +19,6 @@ def placements_possibles(grille: Grille, longueur: int):
 def placer_flotte(grille: Grille):
     """Place un exemplaire de chaque type de bateau sans chevauchement."""
     flotte = []
-
     for bateau_cls in (PorteAvion, Croiseur, Torpilleur, SousMarin):
         longueur = bateau_cls.LONGUEUR
         placements = placements_possibles(grille, longueur)
@@ -28,7 +28,6 @@ def placer_flotte(grille: Grille):
         bateau = bateau_cls(ligne, colonne, vertical=vertical)
         grille.ajoute(bateau)
         flotte.append(bateau)
-
     return flotte
 
 
@@ -62,9 +61,7 @@ def partie():
         ligne, colonne = demander_coordonnees(grille)
         etat, bateau = grille.tirer(ligne, colonne)
 
-        if etat == "hors":
-            continue
-        if etat == "deja":
+        if etat in {"hors", "deja"}:
             continue
 
         coups += 1
@@ -84,5 +81,31 @@ def partie():
     grille.afficher(reveler=True)
 
 
+def launch_tui():
+    """Lance l’interface PyTermGUI."""
+    from tui import BattleshipTUI  # import tardif pour que PyTermGUI reste optionnel
+
+    app = BattleshipTUI()
+    app.run()
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Bataille navale en console ou via PyTermGUI.")
+    parser.add_argument("--tui", action="store_true", help="Démarre l'interface PyTermGUI.")
+    parser.add_argument(
+        "--seed",
+        type=int,
+        help="Graine aléatoire optionnelle pour reproduire un placement.",
+    )
+    return parser.parse_args()
+
+
 if __name__ == "__main__":
-    partie()
+    args = parse_args()
+    if args.seed is not None:
+        random.seed(args.seed)
+
+    if args.tui:
+        launch_tui()
+    else:
+        partie()
